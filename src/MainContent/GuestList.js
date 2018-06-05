@@ -19,7 +19,6 @@ const GuestList = props =>
             setName={text => props.setNameAt(text, index)}
             handleRemove={() => props.removeGuestAt(index)} />
         )}
-      }
   </ul>;
 
 GuestList.propTypes = {

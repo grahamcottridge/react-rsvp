@@ -10,29 +10,21 @@ class App extends Component {
   state = {
     isFiltered: false,
     pendingGuest: "",
-    guests: [
-      {
-        name: 'Graham',
-        isConfirmed: false,
-        isEditing: false
-      },
-      {
-        name: 'Bob',
-        isConfirmed: true,
-        isEditing: false
-      },
-      {
-        name: 'Fred',
-        isConfirmed: true,
-        isEditing: true
-      },
-    ]
+    guests: []
+  };
+
+  lastGuest = 0;
+
+  newGuestId = () => {
+    const id = this.lastGuestId;
+    this.lastGuestId +=1;
+    return id;
   }
 
-  toggleGuestPropertyAt = (property, indexToChange) =>
+  toggleGuestPropertyAt = (property, id) =>
     this.setState({
-      guests: this.state.guests.map((guest, index) => {
-        if (index === indexToChange) {
+      guests: this.state.guests.map((guest) => {
+        if (id === guest.id) {
           return {
             ...guest,
             [property]: !guest[property]
@@ -42,24 +34,21 @@ class App extends Component {
       })
     });
 
-  toggleConfirmationAt = index =>
-    this.toggleGuestPropertyAt("isConfirmed", index);
+  toggleConfirmationAt = id =>
+    this.toggleGuestPropertyAt("isConfirmed", id);
 
-  removeGuestAt = index =>
+  removeGuestAt = id =>
     this.setState({
-      guests: [
-        ...this.state.guests.slice(0, index),
-        ...this.state.guests.slice(index + 1)
-      ]
-    })
+      guests: this.state.guests.filter(guest => id !== guest.id)
+    });
 
-  toggleEditingAt = index =>
-    this.toggleGuestPropertyAt("isEditing", index);
+  toggleEditingAt = id =>
+    this.toggleGuestPropertyAt("isEditing", id);
 
-  setNameAt = (name, indexToChange) =>
+  setNameAt = (name, id) =>
     this.setState({
-      guests: this.state.guests.map((guest, index) => {
-        if (index === indexToChange) {
+      guests: this.state.guests.map(guest => {
+        if (id === guest.id) {
           return {
             ...guest,
             name
@@ -77,12 +66,14 @@ class App extends Component {
 
 newGuestSubmitHandler = e => {
   e.preventDefault();
+  const id = this.newGuestId();
   this.setState({
     guests: [
       {
         name: this.state.pendingGuest,
         isConfirmed: false,
-        isEditing: false
+        isEditing: false,
+        id
       },
       ...this.state.guests
     ],

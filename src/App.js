@@ -13,7 +13,7 @@ class App extends Component {
     guests: []
   };
 
-  lastGuest = 0;
+  lastGuestId = 0;
 
   newGuestId = () => {
     const id = this.lastGuestId;
@@ -23,7 +23,7 @@ class App extends Component {
 
   toggleGuestPropertyAt = (property, id) =>
     this.setState({
-      guests: this.state.guests.map((guest) => {
+      guests: this.state.guests.map(guest => {
         if (id === guest.id) {
           return {
             ...guest,
